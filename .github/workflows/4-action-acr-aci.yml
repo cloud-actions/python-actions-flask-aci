@@ -3,19 +3,23 @@ name: 4-action-acr-aci
 on:
   push:
     branches:
-    - 4-action-acr-aci
+    - master
+    paths:
+    - azure/*
+    - '*'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: azure/actions/login@master
+    - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: bash DEPLOY.sh
       env:
         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        GITHUB_SHA: ${{ github.sha }}
       run: |
         cd $GITHUB_WORKSPACE/
         bash azure/DEPLOY.sh
